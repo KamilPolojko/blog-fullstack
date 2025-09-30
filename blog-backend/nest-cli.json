@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": false,
+    "watchAssets": true,
+    "assets": ["**/*.json"],
+    "tsConfigPath": "tsconfig.build.json"
+  },
+  "watchOptions": {
+    "usePolling": true,
+    "interval": 100
+  }
+}

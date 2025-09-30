@@ -1,0 +1,79 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: nest-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app:consistent
+      - /app/node_modules
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER_NAME: postgres
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: blog-db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SESSION_SECRET: blog_secret
+      MAIL_HOST: smtp.gmail.com
+      MAIL_SECURE: "true"
+      MAIL_SERVICE_MESSAGE_SENDER: morfo12354@gmail.com
+      WEBSITE_EMAIL: kaidooohb@gmail.com
+      MAIL_PASSWORD: pxragkbviaozreua
+      CLOUDINARY_CLOUD_NAME: dm3hj3diy
+      CLOUDINARY_API_KEY: 339645129548166
+      CLOUDINARY_API_SECRET: nQG9e18WFycjuRMnBQVHJOuUkYI
+      FRONTEND_WS_URL: http://localhost:3001
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: 100
+      WATCHPACK_POLLING: "true"
+      TSC_WATCHFILE: "UseFsEventsWithFallbackDynamicPolling"
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blog-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d blog-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
