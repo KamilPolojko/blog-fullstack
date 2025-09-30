@@ -1,0 +1,6 @@
+[submodule "blog-backend"]
+	path = blog-backend
+	url = https://github.com/KamilPolojko/blog-backend.git
+[submodule "blog-frontend-client"]
+	path = blog-frontend-client
+	url = https://github.com/KamilPolojko/blog-frontend-client
